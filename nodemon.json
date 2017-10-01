@@ -1,0 +1,13 @@
+{
+  "verbose": true,
+  "ignore": ["*.test.js","dist/*", "node_modules/*"],
+  
+  "execMap": {
+    "js": "nodemon --exec babel-node --inspect -- ./server/index.js"
+  },
+  "env": {
+    "NODE_ENV": "local",
+
+    "DEBUG": "ost:*"
+  }
+}
