@@ -1,11 +1,36 @@
-import rp from "request-promise";
+import rp from 'request-promise';
 import get from 'lodash/get';
 import log from '../log';
+import reduce from 'lodash/reduce';
 
 const clone = (value) => {
   return {
     ...value
   };
+};
+
+const formatRequestData = requestData => {
+  if (requestData) {
+    try {
+      return `-d '${JSON.stringify(requestData)}' `;
+    } catch (e) {
+      return '';
+    }
+  }
+  return '';
+};
+
+export const mapRequestToCurl = (request) => {
+
+  const headers = reduce(
+    request.headers,
+    (headers, value, header) => headers + `-H '${header}: ${value}' `,
+    ' '
+  );
+
+  let requestData = formatRequestData(get(request, 'body', false));
+
+  return `curl -v -X ${request.method}${headers}${requestData}${request.uri}`;
 };
 
 const request =  function(request) {
@@ -31,23 +56,12 @@ const request =  function(request) {
           if (this.body) {
             data.body = this.body.toString('utf8');
           }
-          log.httpRequest('request: %O', data);
 
-        }).on('response', function(res) {
-          if (this.callback) {
-            // callback specified, request will buffer the body for
-            // us, so wait until the complete event to do anything
-          } else {
-            // cannot get body since no callback specified
-            log.httpResponse('response: %O', {
-              headers    : clone(res.headers),
-              statusCode : res.statusCode
-            }, this);
-          }
+          log.httpRequest('%O', mapRequestToCurl(data));
 
-        }).on('complete', function(res, body) {
+        }).on('complete', function(res) {
           if (this.callback) {
-            log.httpComplete('response: %O', {
+            log.httpComplete('%O', {
               headers    : clone(res.headers),
               statusCode : res.statusCode,
               body       : res.body

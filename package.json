@@ -18,14 +18,17 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "nodemon": "^1.12.1",
     "webpack": "^3.6.0"
   },
   "scripts": {
-    "build": "babel ./server -d ./dist/server",
+    "build:server": "babel ./ -d ./dist/ --ignore node_modules, dist",
+    "build": "rm -rf dist; mkdir dist; npm run build:server",
     "server:watch": "nodemon --config nodemon.json server/index.js",
-    "start": "npm run build; node dist/server/index.js"
+    "start": "npm run build; node dist/server/index.js",
+    "test:watch": "jest --watchAll"
   }
 }
