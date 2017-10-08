@@ -1,5 +1,5 @@
 node_modules/*
-config/common.json
+server/config/common.json
 .idea/*
 dist/*
 coverage/*
