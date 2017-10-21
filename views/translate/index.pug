@@ -1,0 +1,26 @@
+extends ../../public/layout
+
+block prepend content
+  #translate
+    .translate__content
+      .translate__title
+      .translate__values(v-for="translate, translationId in translations")
+        .translate__key {{translationId}}
+        .translate__value(v-for="value in translate")
+          .translate__label.align-middle {{value.locale}}
+          .translate__input
+            span {{value.isDirty}}
+            input(
+              type="text"
+              value="text"
+              v-model="value.text"
+              v-on:change="handleValueChange"
+              v-bind:class="{ active: value.isDirty }"
+            )
+
+
+    .btn.btn-info.translate__fetch-all-btn(v-on:click="fetchTranslations") Fetch All
+    .btn.btn-info.translate__fetch-all-btn(v-on:click="updateTranslations") Update All
+
+
+
