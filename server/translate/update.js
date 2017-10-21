@@ -8,8 +8,6 @@ import log from '../../common/log';
 
 export default function (req, res) {
   const uri = `https://platform.api.onesky.io/1/projects/${conf.get('PROJECT_ID')}/files?${queryString.stringify(getAuthForOneSky())}`;
-  
-
 
   const translations = reduce(conf.get('LOCALES'), (acc, locale) => {
     const formData = {
@@ -34,8 +32,5 @@ export default function (req, res) {
     return acc;
   }, []);
 
-  Promise.all(translations)
-    .then((resp) => res.send(resp))
-    .catch((err) => log.error('%O -', err));
-
+  return Promise.all(translations);
 }

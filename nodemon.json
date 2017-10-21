@@ -1,13 +1,11 @@
 {
   "verbose": true,
-  "ignore": ["*.test.js","dist/*", "node_modules/*"],
-  
+  "ignore": ["*.test.js","dist/*", "node_modules/*", "vue/*"],
   "execMap": {
-    "js": "nodemon --exec babel-node --inspect -- ./server/index.js"
+    "js": "nodemon --exec babel-node --inspect -- ./server/app.js"
   },
   "env": {
     "NODE_ENV": "local",
-
     "DEBUG": "ost:*"
   }
 }

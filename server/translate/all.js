@@ -1,4 +1,3 @@
-import md5 from 'md5';
 import reduce from 'lodash/reduce';
 
 import getAuthForOneSky from './helper/getAuthForOneSky';
@@ -19,14 +18,13 @@ export default function (req, res) {
   return Promise.all(translations)
     .then((responses) => {
       const translations = conf.get('LOCALES');
-      const result = reduce(translations, (acc, translation, idx) => {
-        acc[translation] = JSON.parse(responses[idx]);
+
+      return reduce(translations, (acc, translation, idx) => {
+        acc[translation] = reduce(JSON.parse(responses[idx]), (values, value, key) => {
+          values.push({key, text: value});
+          return values;
+        }, []);
         return acc;
       }, {});
-
-      res.send(result);
-    }).catch((err) => {
-      log.error(err);
-      res.send('ERROR');
     });
 }
