@@ -20,7 +20,7 @@ app.use(function(req, res, next) {
 
 app.get('/translate', (req, res) => {
   try {
-    res.render('translate/index', {title: 'hello', message: 'welcome there'});
+    res.render('translate/index', {});
   } catch (err) {
     log.error('app : %o', err);
     res.send(err);
@@ -28,17 +28,19 @@ app.get('/translate', (req, res) => {
 });
 
 app.get('/translate/all', (req, res) => {
-  translate.all(req, res)
+  return translate.all(req, res)
     .catch((err) => log.error('translate/all : %o', err))
     .then((resp) => res.json(resp));
 });
 
 app.post('/translate/update', (req, res) => {
-  translate.update(req, res)
+  return translate.update(req, res)
     .catch((err) => log.error('translate/update : %O -', err))
     .then((resp) => res.json(resp));
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+const port = process.env.PORT || 3000;
+
+app.listen(port, function () {
+  console.log('One-sky Translation App listening on port 3000!');
 });

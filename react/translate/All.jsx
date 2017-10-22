@@ -21,9 +21,7 @@ class All extends React.Component {
   componentWillMount = () => {
     this.getTranslationValues()
       .then(() => {
-        this.setState({
-          isLoading: false
-        });
+        this.setState({isLoading: false});
     });
   };
 
@@ -32,7 +30,7 @@ class All extends React.Component {
       .then((resp) => {
         this.setState({translates: groupBy(JSON.parse(resp), 'key')});
       })
-      .catch(log.error);
+      .catch((err) => log.error(err));
   };
 
   handleValueChange = (key, idx) => (evt) =>{
@@ -89,7 +87,7 @@ class All extends React.Component {
         });
       })
       .then(() => this.toggleLoadingStateByKey(key))
-      .catch(log.error);
+      .catch((err) => log.error(err));
   };
 
   renderTranslate = (translations, key) => {
