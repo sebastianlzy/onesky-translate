@@ -19,12 +19,16 @@ export default function (req, res) {
     .then((responses) => {
       const translations = conf.get('LOCALES');
 
-      return reduce(translations, (acc, translation, idx) => {
-        acc[translation] = reduce(JSON.parse(responses[idx]), (values, value, key) => {
-          values.push({key, text: value});
-          return values;
-        }, []);
+      reduce(translations, (acc, locale, idx) => {
+        acc = [
+          ...acc,
+          ...reduce(JSON.parse(responses[idx]), (values, value, key) => {
+            values.push({key, text: value, locale: locale});
+            return values;
+          }, [])
+        ];
         return acc;
-      }, {});
+      }, []);
     });
+
 }

@@ -1,9 +1,9 @@
 {
-  "presets": ["env"],
-  "plugins": ["transform-object-rest-spread", "transform-es2015-modules-commonjs"],
+  "presets": ["react", "env"],
+  "plugins": ["transform-object-rest-spread", "transform-es2015-modules-commonjs", "babel-plugin-transform-class-properties"],
   "ignore": [
     "node_modules",
     "dist"
   ],
-  "only": ["./server", "./common"]
+  "only": ["./server", "./common", "./react"]
 }

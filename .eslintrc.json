@@ -7,7 +7,20 @@
       "experimentalObjectRestSpread": true
     }
   },
+  "globals": {
+    "console": false,
+    "document": false,
+    "window": false,
+    "setTimeout": false,
+    "Promise": false
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "parser": "babel-eslint",
   "rules": {
+    "no-console":0,
     "semi": 2,
     "no-var": "error",
     "quotes": ["error", "single"]
