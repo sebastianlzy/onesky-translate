@@ -10,8 +10,8 @@ const extractSass = new ExtractTextPlugin({
 
 module.exports = {
   entry: {
-    app: './vue/app.js',
-    vendor: './vue/vendor.js'
+    app: './react/app.js',
+    vendor: './react/vendor.js'
   },
   output: {
     filename: '[name].bundle.js',
@@ -25,6 +25,7 @@ module.exports = {
   },
   module: {
     rules: [
+
       {test: /\.txt$/, use: 'raw-loader'},
       {
         test: /\.scss|\.sass$/,
@@ -37,22 +38,18 @@ module.exports = {
           fallback: 'style-loader'
         })
       },
+      { test: /\.(woff|woff2|ttf|eot|svg)$/, use:{loader: 'url?limit=10000' }},
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['env']
-          }
         }
       }
     ],
   },
   resolve: {
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js'
-    }
+    extensions: ['.js', '.jsx']
   },
   plugins: [
     new HtmlWebpackPlugin({

@@ -1,0 +1,16 @@
+.loadingCircle {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+
+  margin: 100px auto;
+  -webkit-animation: rotatePlane 1.2s infinite ease-in-out;
+  animation: rotatePlane 1.2s infinite ease-in-out;
+}
+
+@keyframes rotatePlane {
+  0% { transform: perspective(120px) }
+  50% { transform: perspective(120px) rotateY(180deg) }
+  100% { transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+

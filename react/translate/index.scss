@@ -1,0 +1,64 @@
+
+
+.translate__all {
+  padding: 50px;
+  background: rgba(0, 0, 0, 0) linear-gradient(295.97deg, #29d4dd 0%, #2ea8e6 100%) repeat scroll 0 0;
+  color: #484848;
+  min-height: 100%;
+}
+.translate__loading {
+  .loadingCircle {
+    background-color: $blue;
+  }
+}
+.translate__row-key {
+  margin: 10px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 3px;
+}
+.translate__key {
+  padding: 10px 0;
+}
+.translate__edit-btn {
+  float: right;
+  font-size: 0.85rem;
+}
+.translate__edit-btn:hover {
+  cursor: pointer;
+}
+.translate__key-value {
+  color: black;
+  padding: 10px;
+  background: $lighter-grey;
+}
+.translate__update-btn {
+  margin:0 5px;
+}
+.translate__update-btn:hover {
+  cursor: pointer;
+}
+.translate__row-value {
+  width: 100%;
+  padding: 5px 0;
+
+  .translate__value {
+    padding: 10px;
+  }
+  .translate__text {
+    width: 100%;
+    padding: 5px;
+    border-width: 0;
+    border-radius: 3px;
+    border: 1px solid $grey;
+  }
+  .translate__text--disabled {
+    width: 100%;
+    padding: 5px;
+    background: $lighter-grey;
+  }
+  .translate__locale {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+}

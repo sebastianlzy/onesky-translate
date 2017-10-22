@@ -61,11 +61,13 @@ const request =  function(request) {
 
         }).on('complete', function(res) {
           if (this.callback) {
-            log.httpComplete('%O', {
-              headers    : clone(res.headers),
-              statusCode : res.statusCode,
-              body       : res.body
-            });
+            if (log.httpComplete) {
+              log.httpComplete('%O', {
+                // headers    : clone(res.headers),
+                statusCode : res.statusCode,
+                body       : res.body
+              });
+            }
           }
 
         }).on('redirect', function() {

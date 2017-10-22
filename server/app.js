@@ -18,7 +18,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/', (req, res) => {
+app.get('/translate', (req, res) => {
   try {
     res.render('translate/index', {title: 'hello', message: 'welcome there'});
   } catch (err) {
@@ -27,15 +27,15 @@ app.get('/', (req, res) => {
   }
 });
 
-app.get('/translations/all', (req, res) => {
+app.get('/translate/all', (req, res) => {
   translate.all(req, res)
-    .catch((err) => log.error('translations/all : %o', err))
+    .catch((err) => log.error('translate/all : %o', err))
     .then((resp) => res.json(resp));
 });
 
-app.get('/translations/update', (req, res) => {
+app.post('/translate/update', (req, res) => {
   translate.update(req, res)
-    .catch((err) => log.error('translations/update : %O -', err))
+    .catch((err) => log.error('translate/update : %O -', err))
     .then((resp) => res.json(resp));
 });
 
