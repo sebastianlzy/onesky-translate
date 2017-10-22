@@ -21,7 +21,6 @@ export default function (req, res) {
           },
           file_format: 'HIERARCHICAL_JSON',
         };
-
         return request({
           method: 'POST',
           url: uri,

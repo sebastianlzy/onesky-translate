@@ -65,7 +65,7 @@ const request =  function(request) {
               log.httpComplete('%O', {
                 // headers    : clone(res.headers),
                 statusCode : res.statusCode,
-                body       : res.body
+                // body       : res.body
               });
             }
           }

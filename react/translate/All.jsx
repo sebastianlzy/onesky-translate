@@ -74,8 +74,7 @@ class All extends React.Component {
       })
       .then(() => {
         const newTranslates = this.state.newTranslates;
-        delete newTranslates.key;
-
+        delete newTranslates[key];
         this.setState({newTranslates});
       })
       .then(() => {
@@ -108,6 +107,7 @@ class All extends React.Component {
           key={`${key}-${idx}`}
           handleValueChange={this.handleValueChange(key, idx)}
           translation={displayTranslation}
+          translationKey={key}
           isEditable={isEditable}
         />
       );
@@ -146,7 +146,14 @@ class All extends React.Component {
     return (
       <div className="translate__row-key" key={key}>
         <div className="translate__key">
-          <div className="translate__key-value">{key}</div>
+          <div className="translate__key-value">
+            <a
+              href={`https://shopback.oneskyapp.com/collaboration/translate/project/project/73377/language-from/310/language/310/#/?keyword=${key}`}
+              target="_blank"
+            >
+               {key}
+            </a>
+          </div>
         </div>
         <div className="translate__value">
           {this.renderTranslate(translations, key)}

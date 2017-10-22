@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import get from 'lodash/get';
+import trim from 'lodash/trim';
 
 class TranslateRowValue extends React.Component {
   static propTypes = {
     handleValueChange: PropTypes.func,
     translation: PropTypes.object,
     isEditable: PropTypes.bool,
+    translationKey: PropTypes.string,
   };
-  static defaultProps = {};
-  state = {};
 
   shouldComponentUpdate(nextProps) {
     if (this.props.isEditable !== nextProps.isEditable) {
@@ -22,6 +21,29 @@ class TranslateRowValue extends React.Component {
     return true;
   }
 
+  generateOneskyUrl = (locale, key) => {
+    const languageId = {
+      'en-sg': 310,
+      'en-my': 606,
+      'th-th': 56,
+      'en-ph': 309,
+      'id-id': 54,
+      'zh-tw': 2
+    };
+
+    return `https://shopback.oneskyapp.com/collaboration/translate/project/project/73377/language-from/310/language/${languageId[trim(locale)]}/#/?keyword=${key}`;
+  };
+
+  renderLocale = () => {
+    return (
+      <div className="translate__locale">
+        <a target="_blank" href={this.generateOneskyUrl(this.props.translation.locale, this.props.translationKey)}>
+          {this.props.translation.locale}
+        </a>
+      </div>
+    );
+  };
+
   render() {
     const {isEditable, translation} = this.props;
     if (isEditable) {
@@ -33,9 +55,7 @@ class TranslateRowValue extends React.Component {
             defaultValue={translation.text || ''}
             onBlur={this.props.handleValueChange}
           />
-          <div className="translate__locale">
-            {translation.locale}
-          </div>
+          {this.renderLocale()}
         </div>
       );
     }
@@ -45,9 +65,7 @@ class TranslateRowValue extends React.Component {
           {JSON.stringify(translation.text)}
         </div>
 
-        <div className="translate__locale">
-          {translation.locale}
-        </div>
+        {this.renderLocale()}
       </div>
     );
   }
