@@ -1,9 +1,10 @@
 import React from 'react';
-import groupBy from 'lodash/groupBy';
+import PropTypes from 'prop-types';
 import map from 'lodash/map';
 import get from 'lodash/get';
 import includes from 'lodash/includes';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 
 import log from '../../common/log';
 import TranslateRowValue from './TranslateRowValue';
@@ -13,20 +14,33 @@ import CtaButtons from './CtaButtons';
 import Search from './Search';
 
 class All extends React.Component {
+  static propTypes = {
+    translates: PropTypes.object,
+    isLoading: PropTypes.bool,
+    getTranslationValues: PropTypes.func,
+  };
+
+  static defaultProps = {
+    translates: {},
+    isLoading: true,
+  };
+
   state = {
     translates: {},
     newTranslates: {},
     isLoadingByKey: {},
-    isLoading: true,
   };
 
   componentWillMount = () => {
-    api.getTranslationValues()
-      .then((resp) => {
-        const translates = groupBy(JSON.parse(resp), 'key');
-        this.setState({isLoading: false, translates});
-    });
+    this.setState({translates: this.props.translates});
   };
+
+  componentWillReceiveProps = (nextProps, nextContext) => {
+    if(!isEqual(this.props.translates, nextProps.translates)){
+      this.setState({translates: nextProps.translates});
+    }
+  };
+
 
   handleValueChange = (key, idx) => (evt) =>{
     const newTranslates = {
@@ -69,13 +83,7 @@ class All extends React.Component {
         this.setState({newTranslates});
         return null;
       })
-      .then(() => {
-        return api.getTranslationValues()
-          .then((resp) => {
-            const translates = groupBy(JSON.parse(resp), 'key');
-            this.setState({translates});
-          });
-      })
+      .then(() => this.props.getTranslationValues())
       .then(() => this.toggleLoadingStateByKey(key))
       .catch((err) => log.error(err));
   };
@@ -114,7 +122,7 @@ class All extends React.Component {
     return (
       <div className="translate__row-key" key={key}>
         <div className="translate__key">
-          <div className="translate__key-value">
+          <div className="translate__key-value" id={key}>
              {key}
           </div>
         </div>
@@ -138,7 +146,7 @@ class All extends React.Component {
   };
 
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <div className="translate__all">
           <LoadingCircle />
