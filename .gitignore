@@ -4,3 +4,4 @@ server/config/common.json
 dist/*
 coverage/*
 public/*
+yarn.lock
