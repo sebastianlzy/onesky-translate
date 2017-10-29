@@ -12,6 +12,33 @@ class Sidebar extends React.Component {
     isHidden: true
   };
 
+  componentWillMount = () => {
+    const map = {68: false, 69: false};
+    window.onkeydown = (e) => {
+      const key = e.keyCode ? e.keyCode : e.which;
+      console.log('key -', key);
+      if (key === 68) {
+        map[68] = true;
+      }
+      if (key === 69) {
+        map[69] = true;
+      }
+      console.log('toggle -', map);
+      console.log('key -', key);
+      if (map[68] && map[69]) {
+        
+        this.toggleSidebar();
+      }
+    };
+
+    window.onkeyup = (e) => {
+      if (e.keyCode in map) {
+        map[e.keyCode] = false;
+      }
+    };
+  };
+
+
   toggleSidebar = () => {
     this.setState({
       isHidden: !this.state.isHidden
@@ -21,7 +48,8 @@ class Sidebar extends React.Component {
   renderAllKeys = () => {
     const result = [];
     for (let translateKey in this.props.translates) {
-      result.push((<a href={`#${translateKey}`} key={translateKey} className="side-bar__translate-key">{translateKey}</a>));
+      result.push((
+        <a href={`#${translateKey}`} key={translateKey} className="side-bar__translate-key">{translateKey}</a>));
     }
     return result;
   };
@@ -34,7 +62,7 @@ class Sidebar extends React.Component {
     return (
       <div className={className}>
         <div className="side-bar__toggle" onClick={this.toggleSidebar}>
-          {this.state.isHidden ? 'All Keys' : 'Close'}
+          Toggle with D + E
         </div>
         {this.renderAllKeys()}
       </div>
