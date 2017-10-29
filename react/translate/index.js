@@ -14,12 +14,31 @@ class Translate extends React.Component {
     isLoading: true,
   };
 
+  componentWillMount = () => {
+    this.getTranslationValues();
+  };
+
+  getTranslationValues = () => {
+    this.setState(() => ({isLoading: true}));
+
+    return api.getTranslationValues()
+      .then((resp) => {
+        const translates = groupBy(JSON.parse(resp), 'key');
+        this.setState(() => ({translates, isLoading: false}));
+      });
+  };
 
   render() {
     return (
       <div className="translate-container">
-        <Sidebar />
-        <All />
+        <Sidebar
+          translates={this.state.translates}
+        />
+        <All
+          getTranslationValues={this.getTranslationValues}
+          translates={this.state.translates}
+          isLoading={this.state.isLoading}
+        />
       </div>
     );
   }
