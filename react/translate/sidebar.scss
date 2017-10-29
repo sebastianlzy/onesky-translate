@@ -1,0 +1,21 @@
+.translate__side-bar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: white;
+  width: 400px;
+  z-index: 100;
+  border-right: 1px solid black;
+  height: 100%;
+  transition: width 1s ease-in-out;
+}
+
+.translate__side-bar--hide {
+  width: 100px;
+}
+
+.side-bar__toggle {
+  margin-top: 10px;
+  text-align: center;
+  cursor: pointer;
+}

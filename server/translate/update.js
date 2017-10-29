@@ -11,6 +11,9 @@ export default function (req, res) {
   const uri = `https://platform.api.onesky.io/1/projects/${conf.get('PROJECT_ID')}/files?${queryString.stringify(getAuthForOneSky())}`;
 
   const translations = map(req.body, (translation) => {
+    if (!translation.isDirty) {
+      return Promise.resolve();
+    }
     const formData = {
           locale: translation.locale,
           file: {

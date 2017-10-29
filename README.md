@@ -1,7 +1,7 @@
 ### ONESKY - Translation
 
 ## Motivation
-To create a skeleton express application that will support a real world scenario
+To create a skeleton express application that will support a real world scenario (One sky translation)
 
 ## Start
 
@@ -11,7 +11,6 @@ To create a skeleton express application that will support a real world scenario
 
 ### Production
 1. npm run start
-
 
 ## Structure
 - common [/]
