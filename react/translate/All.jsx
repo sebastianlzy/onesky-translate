@@ -1,14 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import debounce from 'lodash/debounce';
 import groupBy from 'lodash/groupBy';
 import map from 'lodash/map';
 import get from 'lodash/get';
+import includes from 'lodash/includes';
+import isEmpty from 'lodash/isEmpty';
 
-import request from '../../common/request';
 import log from '../../common/log';
 import TranslateRowValue from './TranslateRowValue';
 import LoadingCircle from '../common/LoadingCircle';
+import * as api from './api';
+import CtaButtons from './CtaButtons';
+import Search from './Search';
 
 class All extends React.Component {
   state = {
@@ -19,18 +21,11 @@ class All extends React.Component {
   };
 
   componentWillMount = () => {
-    this.getTranslationValues()
-      .then(() => {
-        this.setState({isLoading: false});
-    });
-  };
-
-  getTranslationValues = () => {
-    return request.get(window.location.origin + '/translate/all')
+    api.getTranslationValues()
       .then((resp) => {
-        this.setState({translates: groupBy(JSON.parse(resp), 'key')});
-      })
-      .catch((err) => log.error(err));
+        const translates = groupBy(JSON.parse(resp), 'key');
+        this.setState({isLoading: false, translates});
+    });
   };
 
   handleValueChange = (key, idx) => (evt) =>{
@@ -38,7 +33,7 @@ class All extends React.Component {
       ...this.state.newTranslates,
     };
     newTranslates[key][idx]['text'] = evt.target.value;
-    newTranslates[key]['isDirty'] = true;
+    newTranslates[key][idx]['isDirty'] = true;
     this.setState({newTranslates: newTranslates});
   };
 
@@ -63,11 +58,7 @@ class All extends React.Component {
   handleClickUpdateBtn = (key) => {
     this.toggleLoadingStateByKey(key);
 
-    request({
-      url: window.location.origin + '/translate/update',
-      json: this.state.translates[key],
-      method: 'POST'
-    })
+    api.updateKeys(this.state.translates[key])
       .then((resp) => {
         log.debug('Successfully posted to one sky :: ', resp);
         return null;
@@ -76,14 +67,14 @@ class All extends React.Component {
         const newTranslates = this.state.newTranslates;
         delete newTranslates[key];
         this.setState({newTranslates});
+        return null;
       })
       .then(() => {
-        return new Promise((resolve, reject) => {
-          setTimeout(
-            () => this.getTranslationValues().then(resolve).catch(reject),
-            100
-          );
-        });
+        return api.getTranslationValues()
+          .then((resp) => {
+            const translates = groupBy(JSON.parse(resp), 'key');
+            this.setState({translates});
+          });
       })
       .then(() => this.toggleLoadingStateByKey(key))
       .catch((err) => log.error(err));
@@ -105,7 +96,7 @@ class All extends React.Component {
       return (
         <TranslateRowValue
           key={`${key}-${idx}`}
-          handleValueChange={this.handleValueChange(key, idx)}
+          onBlur={this.handleValueChange(key, idx)}
           translation={displayTranslation}
           translationKey={key}
           isEditable={isEditable}
@@ -114,58 +105,37 @@ class All extends React.Component {
     });
   };
 
-  renderUpdateBtn = (key) => {
-    return (
-      <div className="translate__update-btn-container">
-        <div
-          className="btn btn-outline-danger btn-sm float-right translate__update-btn"
-          onClick={() => this.handleClickUpdateBtn(key)}
-        >
-          Update
-        </div>
-        <div className="clearfix"></div>
-      </div>
-    );
-  };
-
-  renderEditBtn = (key, isEditable) => {
-    return (
-      <div
-        className="translate__edit-btn btn btn-outline-info btn-sm float-right"
-        onClick={() => this.handleClickEdit(key)}
-      >
-        {isEditable ? 'Cancel' : 'Edit'}
-      </div>
-    );
-  };
-
   renderTranslateRow = (translations, key) => {
     const isEditable = get(this.state.newTranslates, `${key}.isEditable`, false);
-    const isDirty = get(this.state.newTranslates, `${key}.isDirty`, false);
+    if (!includes(get(translations, '0.key', ''), this.state.searchValue) && !isEmpty(this.state.searchValue)) {
+      return null;
+    }
 
     return (
       <div className="translate__row-key" key={key}>
         <div className="translate__key">
           <div className="translate__key-value">
-            <a
-              href={`https://shopback.oneskyapp.com/collaboration/translate/project/project/73377/language-from/310/language/310/#/?keyword=${key}`}
-              target="_blank"
-            >
-               {key}
-            </a>
+             {key}
           </div>
         </div>
         <div className="translate__value">
           {this.renderTranslate(translations, key)}
         </div>
-        {this.renderEditBtn(key, isEditable)}
-        {isDirty ? this.renderUpdateBtn(key) : null}
+        <CtaButtons
+          onEdit={() => this.handleClickEdit(key)}
+          isEditable={isEditable}
+          onUpdate={() => this.handleClickUpdateBtn(key)}
+        />
 
         <div className="clearfix"></div>
       </div>
     );
   };
 
+  handleSearchValue = (evt) => {
+    const searchValue = get(evt, 'target.value');
+    this.setState({searchValue});
+  };
 
   render() {
     if (this.state.isLoading) {
@@ -177,6 +147,7 @@ class All extends React.Component {
     }
     return (
       <div className="translate__all">
+        <Search onChange={this.handleSearchValue}/>
         {map(this.state.translates, this.renderTranslateRow)}
       </div>
     );

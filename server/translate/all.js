@@ -17,9 +17,47 @@ export default function () {
     return acc;
   }, []);
 
+  // return Promise.resolve([{'key': 'test1', 'text': '123', 'locale': 'en-sg'}, {
+  //   'key': 'back_to_all_stores',
+  //   'text': 'Back to All Stores 123',
+  //   'locale': 'en-sg'
+  // }, {'key': 'all_categories', 'text': 'all categories', 'locale': 'en-sg'}, {
+  //   'key': 'highest_cashback',
+  //   'text': 'highest cashback',
+  //   'locale': 'en-sg'
+  // }, {'key': 'day_plural', 'text': 'days', 'locale': 'en-sg'}, {
+  //   'key': 'day',
+  //   'text': 'day',
+  //   'locale': 'en-sg'
+  // }, {'key': 'days', 'text': 'days', 'locale': 'en-sg'}, {
+  //   'key': 'google',
+  //   'text': 'android',
+  //   'locale': 'en-sg'
+  // }, {'key': 'xiaomi', 'text': '123', 'locale': 'en-sg'}, {
+  //   'key': 'apple',
+  //   'text': 'ios',
+  //   'locale': 'en-sg'
+  // }, {'key': 'test1', 'text': '123123', 'locale': 'en-my'}, {
+  //   'key': 'back_to_all_stores',
+  //   'text': 'Back to All Stores 123',
+  //   'locale': 'en-my'
+  // }, {'key': 'all_categories', 'text': 'all categories', 'locale': 'en-my'}, {
+  //   'key': 'highest_cashback',
+  //   'text': 'highest cashback',
+  //   'locale': 'en-my'
+  // }, {'key': 'day_plural', 'text': 'days', 'locale': 'en-my'}, {
+  //   'key': 'day',
+  //   'text': 'day',
+  //   'locale': 'en-my'
+  // }, {'key': 'days', 'text': 'days', 'locale': 'en-my'}, {
+  //   'key': 'google',
+  //   'text': 'android',
+  //   'locale': 'en-my'
+  // }, {'key': 'xiaomi', 'text': '123', 'locale': 'en-my'}, {'key': 'apple', 'text': 'ios', 'locale': 'en-my'}]);
+
   return Promise.all(translations)
     .then((responses) => {
-      return reduce(locales, (acc, locale, idx) => {
+      const result = reduce(locales, (acc, locale, idx) => {
         acc = [
           ...acc,
           ...reduce(JSON.parse(responses[idx]), (values, value, key) => {
@@ -29,6 +67,8 @@ export default function () {
         ];
         return acc;
       }, []);
+      console.log('JSON.stringnify(result) -', JSON.stringify(result));
+      return result;
     });
 
 }

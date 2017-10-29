@@ -1,0 +1,16 @@
+.translate__search-bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.translate__search-input {
+  background-color: white;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  &:focus {
+    outline-color: white;
+  }
+}
+

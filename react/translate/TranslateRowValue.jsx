@@ -4,7 +4,7 @@ import trim from 'lodash/trim';
 
 class TranslateRowValue extends React.Component {
   static propTypes = {
-    handleValueChange: PropTypes.func,
+    onBlur: PropTypes.func,
     translation: PropTypes.object,
     isEditable: PropTypes.bool,
     translationKey: PropTypes.string,
@@ -53,16 +53,18 @@ class TranslateRowValue extends React.Component {
             type="text"
             className="translate__text"
             defaultValue={translation.text || ''}
-            onBlur={this.props.handleValueChange}
+            onBlur={this.props.onBlur}
           />
           {this.renderLocale()}
         </div>
       );
     }
+
+    const text = JSON.stringify(translation.text);
     return (
       <div className="translate__row-value">
         <div className="translate__text translate__text--disabled">
-          {JSON.stringify(translation.text)}
+          {text.substring(1, text.length - 1)}
         </div>
 
         {this.renderLocale()}
