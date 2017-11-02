@@ -15,7 +15,7 @@ class Sidebar extends React.Component {
     isHidden: true,
     isKeyVisible: {
       all: false,
-      cashbacks: true
+      cashout: true
     },
     bookmarks: {}
   };
@@ -49,13 +49,13 @@ class Sidebar extends React.Component {
 
   getBookmarks = () => {
     return api.getBookmarks().then((resp) => {
-      const cashback = {};
-      mapValues(get(JSON.parse(resp), 'bookmarks.cashback'), (value) => {
-        Object.assign(cashback, value);
+      const cashout = {};
+      mapValues(get(JSON.parse(resp), 'bookmarks.cashout'), (value) => {
+        Object.assign(cashout, value);
       });
 
       this.setState({
-        bookmarks: {cashback}
+        bookmarks: {cashout}
       });
     });
   };
@@ -104,7 +104,7 @@ class Sidebar extends React.Component {
     return (
       <div className={className}>
         <div className="side-bar__toggle" onClick={this.toggleSidebar}>
-          Toggle with D + E
+          +/-
         </div>
         <div className="side-bar__group">
           <div className="side-bar__group-key" onClick={this.toggleGroupKeyVisibility('all')}>
@@ -113,11 +113,11 @@ class Sidebar extends React.Component {
           <ul className={this.getClassNameForBookmark('all')}>
             {this.renderAllKeys(this.props.translates)}
           </ul>
-          <div className="side-bar__group-key" onClick={this.toggleGroupKeyVisibility('cashback')}>
-            Cashback
+          <div className="side-bar__group-key" onClick={this.toggleGroupKeyVisibility('cashout')}>
+            Cashout
           </div>
-          <ul className={this.getClassNameForBookmark('cashback')}>
-            {this.renderAllKeys(this.state.bookmarks.cashback)}
+          <ul className={this.getClassNameForBookmark('cashout')}>
+            {this.renderAllKeys(this.state.bookmarks.cashout)}
           </ul>
         </div>
       </div>
