@@ -1,15 +1,14 @@
 .translate__row-value {
   width: 100%;
-  padding: 5px 0;
+  border-radius: 3px;
+  border: 1px solid $grey;
+  margin: 10px 0;
 
   .translate__text {
     display: inline-block;
     width: 90%;
     padding: 5px;
     border-width: 0;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
-    border: 1px solid $grey;
     min-height: 2.2rem;
   }
   .translate__text--disabled {
@@ -18,12 +17,10 @@
     background: $lighter-grey;
   }
   .translate__locale {
-    border-bottom-right-radius: 3px;
-    border-top-right-radius: 3px;
     line-height: 1.5rem;
     text-align: center;
     vertical-align: top;
-    border: 1px solid $grey;
+    border-left: 1px solid $grey;
     padding: 5px;
     display: inline-block;
     width: 10%;

@@ -67,7 +67,6 @@ export default function () {
         ];
         return acc;
       }, []);
-      console.log('JSON.stringnify(result) -', JSON.stringify(result));
       return result;
     });
 

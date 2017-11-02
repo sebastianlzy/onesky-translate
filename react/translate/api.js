@@ -14,3 +14,8 @@ export const updateKeys = (data) => {
     method: 'POST'
   });
 };
+
+export const getBookmarks = () => {
+  return request.get('https://one-sky-translation.firebaseio.com/.json?print=pretty')
+    .catch((err) => log.error(err));
+};

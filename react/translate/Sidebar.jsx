@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import map from 'lodash/map';
+import get from 'lodash/get';
+import mapValues from 'lodash/mapValues';
+
+import * as api from './api';
 
 class Sidebar extends React.Component {
   static propTypes = {
@@ -9,24 +12,30 @@ class Sidebar extends React.Component {
   };
   static defaultProps = {};
   state = {
-    isHidden: true
+    isHidden: true,
+    isKeyVisible: {
+      all: false,
+      cashbacks: true
+    },
+    bookmarks: {}
   };
 
-  componentWillMount = () => {
+  componentDidMount = () => {
+    this.setupKeyupShortcutForExpandingSidebar();
+    this.getBookmarks();
+  };
+
+  setupKeyupShortcutForExpandingSidebar = () => {
     const map = {68: false, 69: false};
     window.onkeydown = (e) => {
       const key = e.keyCode ? e.keyCode : e.which;
-      console.log('key -', key);
       if (key === 68) {
         map[68] = true;
       }
       if (key === 69) {
         map[69] = true;
       }
-      console.log('toggle -', map);
-      console.log('key -', key);
       if (map[68] && map[69]) {
-        
         this.toggleSidebar();
       }
     };
@@ -38,6 +47,18 @@ class Sidebar extends React.Component {
     };
   };
 
+  getBookmarks = () => {
+    return api.getBookmarks().then((resp) => {
+      const cashback = {};
+      mapValues(get(JSON.parse(resp), 'bookmarks.cashback'), (value) => {
+        Object.assign(cashback, value);
+      });
+
+      this.setState({
+        bookmarks: {cashback}
+      });
+    });
+  };
 
   toggleSidebar = () => {
     this.setState({
@@ -45,13 +66,33 @@ class Sidebar extends React.Component {
     });
   };
 
-  renderAllKeys = () => {
+  renderAllKeys = (translateKeys) => {
     const result = [];
-    for (let translateKey in this.props.translates) {
+    for (let translateKey in translateKeys) {
       result.push((
-        <a href={`#${translateKey}`} key={translateKey} className="side-bar__translate-key">{translateKey}</a>));
+        <li key={translateKey} className="side-bar__translate-key">
+          <a href={`#${translateKey}`}>{translateKey}</a>
+        </li>
+      ));
     }
     return result;
+  };
+
+  toggleGroupKeyVisibility = (key) => (evt) => {
+    evt.preventDefault();
+    this.setState({
+      isKeyVisible: {
+        ...this.state.isKeyVisible,
+        [key]: !get(this.state, `isKeyVisible.${key}`, false)
+      }
+    });
+  };
+
+  getClassNameForBookmark = (key) => {
+    return classnames({
+      'side-bar__translate-keys--visible': this.state.isKeyVisible[key],
+      'side-bar__translate-keys': true,
+    });
   };
 
   render() {
@@ -59,12 +100,26 @@ class Sidebar extends React.Component {
       'translate__side-bar': true,
       'translate__side-bar--hide': this.state.isHidden,
     });
+
     return (
       <div className={className}>
         <div className="side-bar__toggle" onClick={this.toggleSidebar}>
           Toggle with D + E
         </div>
-        {this.renderAllKeys()}
+        <div className="side-bar__group">
+          <div className="side-bar__group-key" onClick={this.toggleGroupKeyVisibility('all')}>
+            All
+          </div>
+          <ul className={this.getClassNameForBookmark('all')}>
+            {this.renderAllKeys(this.props.translates)}
+          </ul>
+          <div className="side-bar__group-key" onClick={this.toggleGroupKeyVisibility('cashback')}>
+            Cashback
+          </div>
+          <ul className={this.getClassNameForBookmark('cashback')}>
+            {this.renderAllKeys(this.state.bookmarks.cashback)}
+          </ul>
+        </div>
       </div>
     );
   }
